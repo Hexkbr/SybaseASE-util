@@ -3,13 +3,6 @@ go
 SETUSER 'dbo'
 go
 
-/*
-execute sp_addmessage 55555, '%1!'
-go
-execute sp_addmessage 50000, 'Unexpected row count. Expected %1!, actual %2!'
-go
-*/
-
 IF EXISTS (SELECT 1 
              FROM dbo.sysobjects 
             WHERE id = OBJECT_ID('dbo.msg')
@@ -17,6 +10,9 @@ IF EXISTS (SELECT 1
     PRINT 'DROP PROCEDURE dbo.msg'
     EXECUTE ('DROP PROCEDURE dbo.msg')
 END
+go
+
+PRINT 'CREATE PROCEDURE dbo.msg'
 go
 
 CREATE PROCEDURE dbo.msg
@@ -246,97 +242,3 @@ go
 
 SETUSER
 go
-
-/*
--- TEST
-execute msg
-go
-execute msg 'My message'
-go
-execute msg 'My message', @mod = 'PROC1'
-go
-execute msg 'My message', @mod = 'PROC1',  @rowcount = 345
-go
-execute msg 'My message', @rowcount = 345, @expectedrowcount = 3
-go
-declare @retval int
-execute @retval = msg 'My message', @rowcount = 345, @expectedrowcount = 3
-print '%1!', @retval
-go
-execute msg 'My message', @error = 234
-go
-execute msg 'My message', @lvl = 'DEBG'
-go
-execute msg 'My message', @lvl = 'DEBG', @dbglvl = 'INFO'
-go
-begin tran
-execute msg 'My message'
-print 'trancount=%1!', @@trancount
-rollback
-go
-begin tran
-execute msg 'My message', @rollback=1
-print 'trancount=%1!', @@trancount
-rollback
-go
-begin tran
-execute msg 'My message', @rollbackonerror=1
-print 'trancount=%1!', @@trancount
-rollback
-go
-begin tran
-execute msg 'My message', @rollbackonerror=1, @error=2
-print 'trancount=%1!', @@trancount
-rollback
-go
-execute msg 'My message', @quitonerror=1, @error=2
-go
-execute msg 'My message', @quit=1
-go
-execute msg 'My message', @totable = 1
-go
-declare @i tinyint
-set @i=convert(tinyint,'300')
-execute msg 'My message', @quitonerror=1
-go
-execute msg 'My message', @print=0
-go
-begin tran
-execute msg 'My message', @print=0, @rollback=1
-print 'trancount=%1!', @@trancount
-rollback
-go
-begin tran
-execute msg 'My message (12534)', @totable = 1
-commit
-select * from msgs
-go
-begin tran
-execute msg 'My message (1535)', @totable = 1, @transafe = 0
-commit
-select * from msgs
-go
-declare @i int
-set @i = 0
-execute msg 'My message {@i}', @increment=@i output
-execute msg 'My message {@i}', @increment=@i output
-execute msg 'My message {@i}', @increment=@i output, @iteratorstep = 10
-go
-execute msg 'My message %1! - %2! ', @s1='aa', @s2 = 'bb'
-go
-execute msg 'My message %1! - %2! ', @i1=123, @i2 = 777
-go
-execute msg 'My message %1! - %2! ', @d1='20010101'
-           , @d2 = '2013-12-28 22:23:51.49'
-go
-execute msg 'My message %1! - %2! ', @f1=123.44, @f2 = -77.0
-go
-execute msg 'My message %1! - %2! ', @d1='20010101'
-           , @d2 = '2013-12-28 22:23:51.49', @dateformat =4
-go
-execute msg 'My message', @lvl = 'DEBG', @dbglvl = 'INFO', @error = 1
-go
-execute msg 'My message', @lvl = 'DEBG', @dbglvl = 'INFO'
-           , @error = 1, @promotelvlonerr = 0
-go
-*/

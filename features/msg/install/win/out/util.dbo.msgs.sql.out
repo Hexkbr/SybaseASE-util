@@ -1,0 +1,5 @@
+DROP TABLE dbo.msgs
+CREATE TABLE dbo.msgs
+Warning: Maximum row size exceeds allowable width. It is being rounded down to 32767 bytes.
+Warning: Maximum row size exceeds allowable width. It is being rounded down to 32767 bytes.
+Warning: Row size (32767 bytes) could exceed row size limit, which is 1962 bytes.

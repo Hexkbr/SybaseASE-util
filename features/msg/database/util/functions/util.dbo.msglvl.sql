@@ -48,17 +48,5 @@ BEGIN
 END
 go
 
-/*
--- TEST
-select 
- 'ALL'  = dbo.msglvl('ZZZ')
-,'DEBG' =  dbo.msglvl('debg')
-,'INFO' = dbo.msglvl('INFO')
-,'WARN' = dbo.msglvl('Warn')
-,'EROR' = dbo.msglvl('eRoR')
-,'CRIT' = dbo.msglvl('CRIT')
-go
-*/
-
 SETUSER
 go

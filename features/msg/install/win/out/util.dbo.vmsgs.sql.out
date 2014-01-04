@@ -1,0 +1,2 @@
+DROP VIEW dbo.vmsgs
+CREATE VIEW dbo.vmsgs
