@@ -1,1 +1,3 @@
 - create shell script for automatic installation of SQL files
+- add grants
+- add keys to syskeys table

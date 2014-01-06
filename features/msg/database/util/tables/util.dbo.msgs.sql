@@ -69,6 +69,7 @@ CREATE TABLE dbo.msgs (
     ,f8   FLOAT          NULL                -- float argument 8
     ,f9   FLOAT          NULL                -- float argument 9
 )
+LOCK datarows
 go
 
 SETUSER

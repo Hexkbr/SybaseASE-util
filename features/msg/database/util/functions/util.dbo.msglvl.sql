@@ -36,13 +36,13 @@ BEGIN
     DECLARE @intlvl TINYINT
     SET @lvl = UPPER(@lvl)
     SET @intlvl = CASE
-                    WHEN @lvl = 'CRIT' THEN 5
-                    WHEN @lvl = 'EROR' THEN 4
-                    WHEN @lvl = 'WARN' THEN 3
-                    WHEN @lvl = 'INFO' THEN 2
-                    WHEN @lvl = 'DEBG' THEN 1
-                    WHEN @lvl = 'TRCE' THEN 0
-                    ELSE 255 -- 'ALL'
+                    WHEN @lvl = 'CRIT' THEN 60
+                    WHEN @lvl = 'EROR' THEN 50
+                    WHEN @lvl = 'WARN' THEN 40
+                    WHEN @lvl = 'INFO' THEN 30
+                    WHEN @lvl = 'DEBG' THEN 20
+                    WHEN @lvl = 'TRCE' THEN 10
+                    ELSE 0 -- 'ALL'
                   END
    RETURN @intlvl
 END

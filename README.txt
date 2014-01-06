@@ -1,4 +1,14 @@
 ################################################################################
+# LIST OF FEATURES                                                             #
+################################################################################
+
+msg        - logging stored procedure
+dictionary - dictionary (key-value) table
+ddl        - stored procedures to simplify common ddl commands
+ngram      - implementataion of n-gram algorithm 
+             for approximate matching of strings
+
+################################################################################
 # DIRICTORIES STRUCTURE                                                        #
 ################################################################################
 

@@ -5,14 +5,14 @@ go
 
 IF EXISTS (SELECT 1 
              FROM dbo.sysobjects 
-            WHERE id = OBJECT_ID('dbo.vmsgs')
+            WHERE id = OBJECT_ID('dbo.msgsview')
               AND type = 'V') BEGIN
-    PRINT 'DROP VIEW dbo.vmsgs'
-    EXECUTE ('DROP VIEW dbo.vmsgs')
+    PRINT 'DROP VIEW dbo.msgsview'
+    EXECUTE ('DROP VIEW dbo.msgsview')
 END
 go
 
-PRINT 'CREATE VIEW dbo.vmsgs'	
+PRINT 'CREATE VIEW dbo.msgsview'	
 go
 
 /*
@@ -23,7 +23,7 @@ go
 ** Keys   : id - unique identifier
 ** Note   : Trims login and mod fields to 20 characters
 */
-CREATE VIEW dbo.vmsgs
+CREATE VIEW dbo.msgsview
 AS
 SELECT 
     id

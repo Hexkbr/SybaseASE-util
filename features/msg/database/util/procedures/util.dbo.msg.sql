@@ -1,4 +1,4 @@
-USE util
+USE util                       	
 go
 SETUSER 'dbo'
 go
@@ -46,6 +46,8 @@ CREATE PROCEDURE dbo.msg
 ,@iteratorstep     INT            = 1           -- increment size
 ,@totable          BIT            = 0           -- prints to msgs when enabled
 ,@transafe         BIT            = 1           -- no DML when tran is open
+,@raiserror        BIT            = 1           -- RAISERROR when message level
+                                                -- greather or equal to EROR
 
 /* String arguments */
 ,@s1 VARCHAR(16384) = NULL
@@ -96,8 +98,13 @@ BEGIN
     SELECT @rowcount = ISNULL(@rowcount, @@rowcount) 
           ,@error    = ISNULL(@error   , @@error   )
 
-    DECLARE @level    TINYINT 
-           ,@dbglevel TINYINT           
+    DECLARE @level        TINYINT 
+           ,@dbglevel     TINYINT           
+           ,@errlevel     TINYINT
+           ,@originalmsg  VARCHAR(16384)
+
+    SELECT @originalmsg  = @msg
+          ,@errlevel     = dbo.msglvl('EROR')
     
     IF @increment IS NOT NULL BEGIN
         SET @increment = @increment + @iteratorstep
@@ -113,8 +120,8 @@ BEGIN
     SELECT @level    = dbo.msglvl (@lvl)
           ,@dbglevel = dbo.msglvl (ISNULL(@dbglvl,@lvl))
         
-    IF @error != 0 AND @level < 4 AND @promotelvlonerr = 1
-        SET @level = 4
+    IF @error != 0 AND @level < @errlevel AND @promotelvlonerr = 1
+        SET @level = @errlevel
 
     -- Display message when
     IF @level >= @dbglevel BEGIN
@@ -236,6 +243,32 @@ BEGIN
         END
         SELECT syb_quit()
     END
+
+    IF @level >= @errlevel AND @raiserror = 1 BEGIN
+        SET @msg = str_replace(str_replace(str_replace(str_replace(str_replace(
+          str_replace(str_replace(str_replace(str_replace(@originalmsg
+         ,'%9!',COALESCE(@s9,CONVERT(VARCHAR(20),@i9),CONVERT(VARCHAR(20),@d9,9)
+                  ,CONVERT(VARCHAR(20),@f9)))         
+         ,'%8!',COALESCE(@s8,CONVERT(VARCHAR(20),@i8),CONVERT(VARCHAR(20),@d8,9)
+                  ,CONVERT(VARCHAR(20),@f8)))
+         ,'%7!',COALESCE(@s7,CONVERT(VARCHAR(20),@i7),CONVERT(VARCHAR(20),@d7,9)
+                  ,CONVERT(VARCHAR(20),@f7))) 
+         ,'%6!',COALESCE(@s6,CONVERT(VARCHAR(20),@i6),CONVERT(VARCHAR(20),@d6,9)
+                  ,CONVERT(VARCHAR(20),@f6)))
+         ,'%5!',COALESCE(@s5,CONVERT(VARCHAR(20),@i5),CONVERT(VARCHAR(20),@d5,9)
+                  ,CONVERT(VARCHAR(20),@f5)))
+         ,'%4!',COALESCE(@s4,CONVERT(VARCHAR(20),@i4),CONVERT(VARCHAR(20),@d4,9)
+                  ,CONVERT(VARCHAR(20),@f4)))
+         ,'%3!',COALESCE(@s3,CONVERT(VARCHAR(20),@i3),CONVERT(VARCHAR(20),@d3,9)
+                  ,CONVERT(VARCHAR(20),@f3)))
+         ,'%2!',COALESCE(@s2,CONVERT(VARCHAR(20),@i2),CONVERT(VARCHAR(20),@d2,9)
+                  ,CONVERT(VARCHAR(20),@f2)))
+         ,'%1!',COALESCE(@s1,CONVERT(VARCHAR(20),@i1),CONVERT(VARCHAR(20),@d1,9)
+                  ,CONVERT(VARCHAR(20),@f1)))
+    
+        RAISERROR 55555, @msg
+    END
+
     RETURN @error
 END
 go
